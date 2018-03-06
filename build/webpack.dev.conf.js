@@ -14,8 +14,19 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+var dev_env;
+if(process.env.npm_config_argv){
+  var test_argv = JSON.parse(process.env.npm_config_argv).original[1];
+  if(test_argv=='test'){
+    dev_env = require('../config/test.env');
+  }else{
+    dev_env = require('../config/dev.env');
+  }
+}
+console.log(dev_env);
+
 //生成模板文件数组
-var htmls = glob.sync('./src/model[1-2]/*.html').map(function (item) {
+var htmls = glob.sync('./src/**/index.html').map(function (item) {
   console.log('./' + item.slice(6));//
     return new HtmlWebpackPlugin({
         filename: item.slice(6),
@@ -58,7 +69,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env': dev_env
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.

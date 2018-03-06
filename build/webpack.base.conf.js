@@ -12,14 +12,13 @@ function resolve (dir) {
 
 //获取所有的模块文件
 var entryJS = {};
-var entryJS = glob.sync('./src/model[1-2]/*.js').reduce(function (prev, curr) {
+var entryJS = glob.sync('./src/?(teacher|student)/index.js').reduce(function (prev, curr) {
     prev[curr.slice(6, -3)] = curr;
     return prev;
 }, {});
+
+//入口文件
 console.log(entryJS)
-// for (i in entryJS){
-// console.log(i,entryJS[i])
-// }
 
 
 module.exports = {

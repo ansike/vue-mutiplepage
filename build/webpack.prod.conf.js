@@ -15,7 +15,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const env = require('../config/prod.env')
 
 //生成模板文件数组
-var htmls = glob.sync('./src/model[1-2]/*.html').map(function (item) {
+var htmls = glob.sync('./src/**/index.html').map(function (item) {
   console.log(item.slice(6, -5));//
     return new HtmlWebpackPlugin({
         filename: './' + item.slice(6),
@@ -152,6 +152,30 @@ if (config.build.productionGzip) {
 if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
+var testServer = {
+  //绍欢
+  test38: '192.168.240.55:8020',
+  test60: '192.168.240.5:8020',
+  test22: '192.168.240.82:8020',
+  test120: '192.168.240.143:8020',
+  test98: '192.168.240.98:8020',
+  test102: '192.168.240.127:8020',
+}
+var argv;
+var lastArgv;
+try {
+  argv = JSON.parse(process.env.npm_config_argv).original;
+} catch (e) {
+  argv = process.argv;
+}
+if (argv) {
+  lastArgv = argv.toString().split(',').pop();
+}
+if (/^test/.test(lastArgv)) {
+  webpackConfig.plugins.push(new BuildUploader({receiver:'http://'+testServer[lastArgv]+'/fisreceiver.php',toPath:'/home/homework/webroot/static/misfz'}));
+
 }
 
 module.exports = webpackConfig
